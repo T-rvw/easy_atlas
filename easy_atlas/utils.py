@@ -1,4 +1,4 @@
-import ConfigParser, os
+import configparser, os
 
 class INIHandler:
     '''INIHandler simplifies the load/save information on INI style files.'''
@@ -15,15 +15,13 @@ class INIHandler:
         
         configFilename = os.environ['TMPDIR']+"/"+_file
         
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(configFilename)
         info = ""
         try:
             info = config.get("ROOT", option)
         except:
             pass
-            
-        if debug: print configFilename    
         
         return info
     
@@ -40,7 +38,7 @@ class INIHandler:
         
         configFilename = os.environ['TMPDIR']+"/"+_file
         
-        config = ConfigParser.RawConfigParser()
+        config = configparser.RawConfigParser()
         config.read(configFilename)
         try:
             config.add_section('ROOT')
@@ -50,5 +48,3 @@ class INIHandler:
         
         with open(configFilename, 'wb') as configfile:
             config.write(configfile)
-            
-        if debug: print configFilename

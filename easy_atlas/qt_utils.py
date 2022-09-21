@@ -1,8 +1,9 @@
 from maya import OpenMayaUI as omui  # @UnresolvedImport
-from PySide.QtCore import * 
-from PySide.QtGui import *
-from PySide.QtUiTools import *
-from shiboken import wrapInstance
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
+from PySide2.QtUiTools import *
+from shiboken2 import wrapInstance
 import maya.cmds as cmds
 
 class RawWidget:
@@ -12,6 +13,11 @@ class RawWidget:
         self.name = name
         self.type = type
 
+def getMayaMainWindow():
+    ptr = omui.MQtUtil.mainWindow()
+    mayaMainWindow = wrapInstance(int(ptr), QWidget)
+    return mayaMainWindow
+
 def loadQtWindow(uiFile, windowName):
     '''Auxiliary method that loads .ui files under main Maya window.'''
 
@@ -20,10 +26,7 @@ def loadQtWindow(uiFile, windowName):
         cmds.deleteUI(windowName)  # @UndefinedVariable
     
     # Define Maya window
-    global mayaMainWindow
-    mayaMainWindow = None
-    mayaMainWindowPtr = omui.MQtUtil.mainWindow()
-    mayaMainWindow = wrapInstance(long(mayaMainWindowPtr), QWidget)
+    mayaMainWindow = getMayaMainWindow()
     
     # Load UI
     loader = QUiLoader()
@@ -42,5 +45,5 @@ def getControl(rawWidget):
         ptr = omui.MQtUtil.findMenuItem(rawWidget.name)
     else:
         ptr = omui.MQtUtil.findControl(rawWidget.name)
-    foundControl = wrapInstance(long(ptr), rawWidget.type)
+    foundControl = wrapInstance(int(ptr), rawWidget.type)
     return foundControl
